@@ -17,6 +17,7 @@ func v1Router(cf *ApiConfig) *chi.Mux {
 		helpers.RespondWithError(w, http.StatusInternalServerError, "Internal Server Error")
 	})
 	v1Router.Mount("/users", userRouter(cf))
+	v1Router.Mount("/feeds", feedsRouter(cf))
 
 	return v1Router
 }
