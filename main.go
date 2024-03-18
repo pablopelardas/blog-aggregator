@@ -2,10 +2,11 @@ package main
 
 import (
 	"database/sql"
-	"internal/helpers"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/pablopelardas/blog-aggregator/internal/helpers"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
