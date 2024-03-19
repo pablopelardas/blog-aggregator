@@ -21,6 +21,17 @@ type Feed struct {
 	LastFetchedAt sql.NullTime
 }
 
+type Post struct {
+	ID          uuid.UUID
+	Title       string
+	Url         string
+	Description string
+	PublishedAt time.Time
+	FeedID      uuid.NullUUID
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
 type User struct {
 	ID        uuid.UUID
 	Name      string

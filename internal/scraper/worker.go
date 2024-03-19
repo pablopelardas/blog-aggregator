@@ -7,6 +7,8 @@ import (
 	"internal/database"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func ScraperWorker() {
@@ -30,7 +32,28 @@ func ScraperWorker() {
 					ID: feed.ID,
 				})
 				for _, item := range rss.Channel.Item {
-					fmt.Println("Post: ", item.Title)
+					pubDate, err := time.Parse(time.RFC1123Z, item.PubDate) 
+					if err != nil {
+						fmt.Printf("Error parsing date: %s", err)
+						continue
+					}
+					_,err = config.DB.CreatePost(context.TODO(), database.CreatePostParams{
+						FeedID: uuid.NullUUID{UUID: feed.ID, Valid: true},
+						Title: item.Title,
+						Url: item.Link,
+						Description: item.Description,
+						PublishedAt: pubDate,
+						ID:          uuid.New(),
+						CreatedAt:   time.Now(),
+						UpdatedAt:   time.Now(),
+					})
+					if err != nil {
+						// if error include duplicate key, ignore
+						if err.Error() == "pq: duplicate key value violates unique constraint \"posts_url_key\"" {
+							continue
+						}
+						fmt.Printf("Error creating post: %s", err)
+					}
 				}
 			}(feed)
 		}

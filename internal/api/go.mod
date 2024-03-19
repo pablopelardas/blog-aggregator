@@ -7,6 +7,9 @@ require github.com/go-chi/chi v1.5.5
 require internal/database v1.0.0
 
 replace internal/database v1.0.0 => ../database
+require internal/helpers v1.0.0
+
+replace internal/helpers v1.0.0 => ../helpers
 
 require (
 	github.com/go-chi/cors v1.2.1
