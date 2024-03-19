@@ -14,7 +14,7 @@ type ApiConfig struct{
 	DB *database.Queries
 }
 
-func getAPIConfig() *ApiConfig {
+func GetAPIConfig() *ApiConfig {
 	db, err := sql.Open("postgres", os.Getenv("DB_CONN_STRING"))
 	if err != nil {
 		log.Fatal(err)
@@ -25,7 +25,7 @@ func getAPIConfig() *ApiConfig {
 }
 
 func NewRouter() *chi.Mux {
-	apiConfig := getAPIConfig()
+	apiConfig := GetAPIConfig()
 	router := chi.NewRouter()
 	router.Use(cors.Handler(cors.Options{
 		AllowedOrigins: []string{"https://*", "http://*"},

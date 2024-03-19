@@ -2,6 +2,7 @@ package main
 
 import (
 	"internal/api"
+	"internal/scraper"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +16,7 @@ import (
 func main(){
 	godotenv.Load()
 	port := os.Getenv("PORT")
+	scraper.ScraperWorker()
 
 	// Start the server
 	srv := &http.Server{

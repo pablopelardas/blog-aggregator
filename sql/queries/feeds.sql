@@ -8,3 +8,9 @@ RETURNING *;
 SELECT * FROM feeds;
 
 
+-- name: GetNextFeedsToFetch :many
+SELECT * FROM feeds ORDER BY (CASE WHEN last_fetched_at IS NULL THEN 1 ELSE 0 END) DESC, 
+         last_fetched_at ASC LIMIT $1;
+
+-- name: MarkFeedAsFetched :one
+UPDATE feeds SET last_fetched_at = $1 WHERE id = $2 RETURNING *;

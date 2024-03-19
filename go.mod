@@ -8,6 +8,10 @@ require internal/helpers v1.0.0
 
 replace internal/helpers => ./internal/helpers
 
+require internal/scraper v1.0.0
+
+replace internal/scraper => ./internal/scraper
+
 require internal/middlewares v1.0.0
 
 require internal/database v1.0.0
