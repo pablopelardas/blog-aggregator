@@ -18,6 +18,7 @@ func v1Router(cf *ApiConfig) *chi.Mux {
 	})
 	v1Router.Mount("/users", userRouter(cf))
 	v1Router.Mount("/feeds", feedsRouter(cf))
+	v1Router.Mount("/feed-follows", feedFollowsRouter(cf))
 
 	return v1Router
 }
