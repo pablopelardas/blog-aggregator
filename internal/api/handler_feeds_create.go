@@ -19,13 +19,8 @@ func (cf *ApiConfig) handlerCreateFeed(w http.ResponseWriter, r *http.Request, u
 		Url string `json:"url"`
 	}
 	type returnBody struct {
-		Id uuid.UUID `json:"id"`
-		Name string `json:"name"`
-		Url string `json:"url"`
-		UserID uuid.UUID `json:"user_id"`
-		CreatedAt time.Time `json:"created_at"`
-		UpdatedAt time.Time `json:"updated_at"`
-
+		Feed database.Feed `json:"feed"`
+		FeedFollow database.UsersFeed `json:"follow"`
 	}
 	dat, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -66,14 +61,32 @@ func (cf *ApiConfig) handlerCreateFeed(w http.ResponseWriter, r *http.Request, u
 		helpers.RespondWithError(w, http.StatusInternalServerError, "Error creating user")
 		return
 	}
+	feedFollowId := uuid.New()
+	// create feedFollow
+	_, err = cf.DB.CreateFollow(r.Context(), database.CreateFollowParams{
+		ID: feedFollowId,
+		FeedID: uuid.NullUUID{UUID: id, Valid: true},
+		UserID: userID,
+		CreatedAt: createdAt,
+		UpdatedAt: updatedAt,
+	})
 
 	// respond with id and cleaned body
 	helpers.RespondWithJSON(w, http.StatusCreated, returnBody{
-		Id: id,
-		Name: rBody.Name,
-		Url: rBody.Url,
-		UserID: userID.UUID,
-		CreatedAt: createdAt,
-		UpdatedAt: updatedAt,
+		Feed: database.Feed{
+			ID: id,
+			Name: rBody.Name,
+			Url: rBody.Url,
+			UserID: uuid.NullUUID{UUID: user.ID, Valid: true},
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+		},
+		FeedFollow: database.UsersFeed{
+			ID: uuid.New(),
+			UserID: uuid.NullUUID{UUID: user.ID, Valid: true},
+			FeedID: uuid.NullUUID{UUID: feedFollowId, Valid: true},
+			CreatedAt: createdAt,
+			UpdatedAt: updatedAt,
+		},
 	})
 }

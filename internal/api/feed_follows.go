@@ -9,6 +9,7 @@ func feedFollowsRouter(cf *ApiConfig) *chi.Mux {
 
 	feedFollows.Post("/", cf.middlewareAuth(cf.handlerdFollowFeed))
 	feedFollows.Delete("/{id}", cf.middlewareAuth(cf.handlerUnfollowFeed))
+	feedFollows.Get("/", cf.middlewareAuth(cf.handlerGetAllFeedFollows))
 
 	return feedFollows
 }
